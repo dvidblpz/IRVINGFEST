@@ -79,3 +79,29 @@ a.dj-card:focus-visible{outline:2px solid #ff5269;outline-offset:4px}
 .ticket-section{background:radial-gradient(ellipse at 50% 35%,#35101b,#09070b 70%);text-align:center;border-top:1px solid #321822;border-bottom:1px solid #321822}
 .ticket-content{max-width:680px;margin:auto}.ticket-content h2{font-size:clamp(3rem,8vw,6rem)}.ticket-content>p:not(.eyebrow){max-width:530px;margin:0 auto 30px;color:#b8aab0;line-height:1.8;font-size:14px}.ticket-open{font:700 11px "Space Grotesk",sans-serif;cursor:pointer}.ticket-disclaimer{display:block;max-width:500px;margin:20px auto 0;color:#8e7a82;font:10px/1.7 "Special Elite",monospace}
 .ticket-modal{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:18px;background:#030205eF;overflow-y:auto}.ticket-modal[hidden]{display:none!important}.ticket-dialog{position:relative;width:min(100%,520px);max-height:calc(100svh - 36px);overflow-y:auto;padding:clamp(24px,5vw,42px);border:1px solid #7e2a3c;background:radial-gradient(ellipse at top,#29101a,#0a070c 70%);box-shadow:0 0 70px #b51e2b25}.ticket-close{position:absolute;top:12px;right:14px;border:1px solid #63303d;background:#140910;color:#f4dfe3;font-size:26px;width:38px;height:38px;cursor:pointer}.ticket-dialog h2{font-size:clamp(2.7rem,8vw,4rem);margin:16px 0 24px}.ticket-dialog label{display:block;text-align:left;margin:0 0 8px;font:10px "Special Elite",monospace;letter-spacing:1.5px;color:#caaeb7}.ticket-dialog input{width:100%;padding:14px 12px;margin-bottom:16px;border:1px solid #63303d;background:#08060a;color:#fff;font:15px "Space Grotesk",sans-serif;border-radius:0}.ticket-dialog input:focus-visible,.ticket-dialog button:focus-visible{outline:2px solid #ff8798;outline-offset:3px}.ticket-dialog>.blood-button,.ticket-result>.blood-button{display:block;width:100%;cursor:pointer}.ticket-result{margin-top:24px}.ticket-result canvas{width:100%;height:auto;border:1px solid #63303d}.ticket-result>button{margin-top:14px}.ticket-status{color:#d5bfc6;font:11px/1.6 "Special Elite",monospace}
+
+
+/* Corrección móvil: mostrar la flecha ▲ y distribuir las cuatro direcciones en forma de cruceta. */
+@media (max-width: 700px) {
+  .touch-controls {
+    display: grid;
+    grid-template-rows: 30px 30px;
+    justify-items: center;
+    align-items: center;
+    gap: 4px;
+  }
+  .touch-controls > button {
+    display: block;
+    width: 34px;
+    height: 30px;
+  }
+  .touch-controls > div {
+    display: flex;
+    gap: 4px;
+  }
+  .touch-controls button {
+    min-width: 34px;
+    min-height: 30px;
+    touch-action: manipulation;
+  }
+}
