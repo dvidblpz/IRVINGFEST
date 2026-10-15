@@ -1,0 +1,143 @@
+<!doctype html>
+<!-- IRVINGFEST: invitación web. Los comentarios señalan las zonas principales para futuras modificaciones. -->
+<html lang="es">
+<head>
+<!-- Metadatos, tipografías y hoja de estilos global. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#09070b">
+<meta name="description" content="IRVINGFEST — una noche de Halloween, terror psicológico y supervivencia. 24 de octubre, de 9 PM a 4 AM.">
+<title>IRVINGFEST — La noche te está mirando</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Capas decorativas de grano y viñeta; tienen pointer-events desactivado en CSS. -->
+<div class="grain" aria-hidden="true"></div><div class="vignette" aria-hidden="true"></div>
+<!-- Apertura cinematográfica: se cierra con una acción del usuario para respetar autoplay y accesibilidad. -->
+<section class="cinema-intro" id="cinemaIntro" aria-labelledby="introTitle">
+ <div class="intro-static" aria-hidden="true"></div><div class="intro-crosshair" aria-hidden="true">＋</div>
+ <p class="intro-kicker">TRANSMISIÓN RECUPERADA · ARCHIVO 24.10.26</p>
+ <h1 id="introTitle">NO MIRES<br><em>ATRÁS.</em></h1>
+ <p class="intro-copy">Si escuchas que alguien te llama…<br>asegúrate de que esté frente a ti.</p>
+ <button class="intro-enter" id="enterInvitation" type="button">INICIAR TRANSMISIÓN <span>↗</span></button>
+ <span class="intro-foot">IRVINGFEST · EXPEDIENTE 001</span>
+</section>
+
+<header class="topbar"><a class="brand" href="#inicio" aria-label="IRVINGFEST inicio">I<span>F</span></a><span class="topnote">NO MIRES ATRÁS</span><span class="topdate">24.10.26</span></header>
+<!-- Se intenta iniciar la música al cargar; si el navegador bloquea autoplay, el control visible permite activarla con un toque. -->
+<button id="musicToggle" class="music-toggle" type="button" aria-pressed="false" aria-label="Activar música de terror"><span class="music-icon" aria-hidden="true">♫</span><span id="musicLabel">ACTIVAR AMBIENTE</span></button>
+<audio id="backgroundMusic" autoplay loop preload="auto">
+  <source src="assets/audio/ambiente-psicologico.mp3" type="audio/mpeg">
+</audio>
+<main>
+<section class="hero" id="inicio">
+  <div class="moon" aria-hidden="true"></div><div class="fog fog-a"></div><div class="fog fog-b"></div>
+  <p class="eyebrow flicker">UNA NOCHE. CERO ESCAPE.</p>
+  <h1 data-text="IRVINGFEST">IRVINGFEST</h1>
+  <p class="hero-sub">La noche tiene hambre.</p>
+  <div class="hero-meta"><span>24 OCTUBRE 2026</span><i>✦</i><span>9:00 PM — 4:00 AM</span></div>
+  <!-- Cuenta regresiva basada en la hora local de Monterrey (UTC-6). -->
+  <div class="countdown-panel" aria-label="Cuenta regresiva para IRVINGFEST">
+   <p id="countdownMessage">LA NOCHE COMIENZA EN</p>
+   <div class="countdown" id="eventCountdown">
+    <div><strong id="countDays">--</strong><span>DÍAS</span></div><div><strong id="countHours">--</strong><span>HORAS</span></div><div><strong id="countMinutes">--</strong><span>MIN</span></div><div><strong id="countSeconds">--</strong><span>SEG</span></div>
+   </div>
+  </div>
+  <a class="blood-button" href="#expediente">ENTRAR BAJO TU PROPIO RIESGO <span>↘</span></a>
+  <p class="microcopy">Si escuchas tu nombre, no respondas.</p>
+  <div class="scroll-mark">DESLIZA PARA SOBREVIVIR <span>↓</span></div>
+</section>
+<section class="warning-strip"><span class="warning-symbol">⚠</span><p>REGLA DE LA NOCHE: <strong>DISFRAZ OBLIGATORIO</strong> <span class="slash">/</span> <strong>NO CERVEZA DE VIDRIO</strong></p><span class="warning-symbol">⚠</span></section>
+<section class="manifesto section" id="expediente">
+  <div class="section-index">01 / EL EXPEDIENTE</div>
+  <div class="manifesto-grid"><div><p class="eyebrow">ARCHIVO CLASIFICADO</p><h2>NO ES UNA<br><em>FIESTA NORMAL.</em></h2></div>
+  <div class="manifesto-copy"><p>Cuando el reloj marque las nueve, las reglas cambiarán. Las sombras tendrán memoria y el silencio empezará a decir tu nombre.</p><p>Ven disfrazado. Mantén los ojos abiertos. Y recuerda: lo que no ves también puede encontrarte.</p><p class="type-note">[ TRANSMISIÓN INTERRUMPIDA — SEÑAL INESTABLE ]</p></div></div>
+  <div class="facts"><div><small>FECHA</small><strong>24 <span>OCT</span></strong><label>SÁBADO</label></div><div><small>HORARIO</small><strong>9<span>PM</span> — 4<span>AM</span></strong><label>HASTA EL AMANECER</label></div><div><small>CÓDIGO DE VESTIMENTA</small><strong>DISFRAZ</strong><label>OBLIGATORIO</label></div></div>
+</section>
+<!-- VIDEO FUTURO: guarda el MP4 final en assets/video/terror.mp4. -->
+<section class="video-section section">
+ <div class="section-index">02 / EVIDENCIA VISUAL</div><div class="video-heading"><h2>ALGO SE<br><em>MUEVE AHÍ.</em></h2><p>Sube el volumen.<br>Desconfía del silencio.</p></div>
+ <div class="video-frame"><div class="video-overlay">SEÑAL ENCONTRADA <span>REC ●</span></div>
+ <!-- El video aún no se incluye; añade assets/video/terror.mp4 cuando esté listo. -->
+ <video id="terrorVideo" controls playsinline preload="metadata" poster="assets/poster.svg">
+   <source src="assets/video/terror.mp4" type="video/mp4">
+   Tu navegador no puede reproducir este video.
+ </video><div id="videoPlaceholder" class="video-placeholder"><span class="play-glyph">▶</span><strong>ARCHIVO DE VIDEO PENDIENTE</strong><small>Coloca tu video como <code>assets/video/terror.mp4</code></small></div></div>
+ <p class="caption">No todo lo que aparece en pantalla está dentro del video.</p>
+</section>
+<!-- Minijuego arcade: canvas, HUD, capa de inicio/fin y controles táctiles. -->
+<section class="game-section section" id="juego">
+ <div class="section-index">03 / PRUEBA DE SUPERVIVENCIA</div><div class="game-intro"><div><p class="eyebrow">ARCADE MALDITO · 8-BIT</p><h2>NO DEJES QUE<br><em>TE ATRAPE.</em></h2></div><p>Un nivel. Dos vidas.<br>Una salida que quizá no exista.</p></div>
+ <div class="game-shell"><div class="game-hud"><span>IRVING NIGHTMARE</span><span id="lifeCounter">♥ ♥</span><span id="gameStatus">LISTO</span></div>
+  <canvas id="gameCanvas" width="640" height="360" aria-label="Juego de supervivencia de 8 bits"></canvas>
+  <div class="game-message" id="gameMessage"><strong>LA CASA NO ESTÁ VACÍA</strong><p>Recoge la llave y llega a la puerta. Evita a la sombra.</p><button id="startGame" class="arcade-button">COMENZAR NIVEL</button></div>
+  <div class="game-controls"><span>TECLADO: WASD / FLECHAS</span><div class="touch-controls"><button data-dir="up" aria-label="Arriba">▲</button><div><button data-dir="left" aria-label="Izquierda">◀</button><button data-dir="down" aria-label="Abajo">▼</button><button data-dir="right" aria-label="Derecha">▶</button></div></div><span>OBJETIVO: LLAVE → SALIDA</span></div>
+ </div><p class="game-footnote">Advertencia: este minijuego es solo una prueba digital. Si pierdes las dos vidas, aparecerá GAME OVER. Respira. Puedes volver a intentarlo.</p>
+</section>
+<!-- Confirmación de asistencia y generación local del boleto. -->
+<section class="ticket-section section" id="boleto">
+ <div class="section-index">04 / TU PASE A LA PESADILLA</div>
+ <div class="ticket-content"><p class="eyebrow">LA CASA YA SABE QUE VIENES</p><h2>¿TE ATREVES A<br><em>SOBREVIVIR?</em></h2>
+  <p>Confirma tu asistencia y genera tu boleto digital de IRVINGFEST. Guárdalo en tu teléfono y preséntalo al llegar.</p>
+  <button class="blood-button ticket-open" id="openTicket" type="button">☠ ACEPTO SOBREVIVIR <span>↗</span></button>
+  <small class="ticket-disclaimer">Boleto digital de confirmación; el folio se genera en este dispositivo y no es una validación de acceso.</small>
+ </div>
+</section>
+<div class="ticket-modal" id="ticketModal" hidden role="dialog" aria-modal="true" aria-labelledby="ticketModalTitle">
+ <div class="ticket-dialog"><button class="ticket-close" id="closeTicket" type="button" aria-label="Cerrar">×</button>
+  <p class="eyebrow">REGISTRO DE SUPERVIVIENTES</p><h2 id="ticketModalTitle">RECLAMA TU<br><em>BOLETO</em></h2>
+  <label for="guestName">Nombre del invitado</label><input id="guestName" name="guestName" maxlength="70" autocomplete="name" placeholder="Escribe tu nombre" required>
+  <button class="blood-button" id="generateTicket" type="button">GENERAR MI BOLETO ☠</button>
+  <div class="ticket-result" id="ticketResult" hidden><canvas id="ticketCanvas" width="1000" height="1600" aria-label="Vista previa del boleto de IRVINGFEST"></canvas><button class="blood-button" id="downloadTicket" type="button">DESCARGAR BOLETO PNG ↓</button><p class="ticket-status" id="ticketStatus" role="status"></p></div>
+ </div>
+</div>
+
+<!-- DJs invitados: cada logo enlaza a la promoción que antes se abría desde su QR. -->
+<section class="promo-section section">
+ <div class="section-index">05 / SEÑALES DE OTRO MUNDO</div><h2>CONOCE A LOS DJs.<br><em>SI TE ATREVES.</em></h2>
+ <p class="promo-intro">Toca el logo de cada DJ para visitar su promoción.</p>
+ <!-- PORTAL 01: JALLZ. El logo enlaza al destino de la antigua promoción 1. -->
+ <div class="dj-lineup" aria-label="DJs invitados de IRVINGFEST">
+  <a class="dj-card" href="https://www.qrcreator.dev/es-ES/p/D85816F3" target="_blank" rel="noopener noreferrer" aria-label="Visitar promoción de JALLZ">
+   <img src="assets/djs/taliz.webp" alt="Logo de DJ JALLZ" loading="lazy">
+   <span>DJ INVITADO · PORTAL 01</span><strong>JALLZ ↗</strong>
+  </a>
+  <!-- PORTAL 02: CHRISLEY. El logo enlaza al destino de la antigua promoción 2. -->
+  <a class="dj-card" href="https://www.qrcreator.dev/es-ES/p/C5CA78FF" target="_blank" rel="noopener noreferrer" aria-label="Visitar promoción de Chrisley Live Set">
+   <img src="assets/djs/chrisley-live-set.webp" alt="Logo de Chrisley Live Set" loading="lazy">
+   <span>DJ INVITADO · PORTAL 02</span><strong>CHRISLEY · LIVE SET ↗</strong>
+  </a>
+ </div>
+</section>
+
+<!-- Ubicación del evento: comprobar la dirección y el pin de Maps antes de publicar. -->
+<section class="location-section section" id="ubicacion">
+ <div class="section-index">06 / EL PUNTO DE ENCUENTRO</div>
+ <div class="location-grid">
+  <div><p class="eyebrow">COORDENADAS DE LA NOCHE</p><h2>EL MIEDO<br><em>TIENE DIRECCIÓN.</em></h2>
+   <p class="location-address">Av. Alfonso Reyes 227<br>Central, Bernardo Reyes<br>64190, Monterrey, Nuevo León</p>
+   <p class="location-note">Llega preparado. La noche no espera a nadie.</p>
+   <a class="blood-button" href="https://www.google.com/maps/search/?api=1&query=Av.%20Alfonso%20Reyes%20227%2C%20Central%2C%20Bernardo%20Reyes%2C%2064190%2C%20Monterrey%2C%20Nuevo%20Le%C3%B3n" target="_blank" rel="noopener noreferrer">ABRIR UBICACIÓN EN MAPS ↗</a>
+   <!-- Waze usa la dirección como búsqueda; verificar el pin exacto antes de publicar. -->
+   <a class="waze-button" href="https://waze.com/ul?q=Av.%20Alfonso%20Reyes%20227%2C%20Central%2C%20Bernardo%20Reyes%2C%2064190%2C%20Monterrey%2C%20Nuevo%20Le%C3%B3n&navigate=yes" target="_blank" rel="noopener noreferrer" aria-label="Abrir la ubicación de IRVINGFEST en Waze">LLEGAR CON WAZE ↗</a>
+  </div>
+  <div class="location-card"><div class="map-cross">＋</div><span>DESTINO REGISTRADO</span><strong>IRVINGFEST</strong><small>MONTERREY · NUEVO LEÓN</small><a href="https://www.google.com/maps/search/?api=1&query=Av.%20Alfonso%20Reyes%20227%2C%20Central%2C%20Bernardo%20Reyes%2C%2064190%2C%20Monterrey%2C%20Nuevo%20Le%C3%B3n" target="_blank" rel="noopener noreferrer">VER RUTA ↗</a></div>
+ </div>
+</section>
+
+<section class="final-call"><div class="final-eyes" aria-hidden="true">◉　　 ◉</div><p class="eyebrow">LA ÚLTIMA ADVERTENCIA</p><h2>¿TE ATREVERÁS<br>A ENTRAR?</h2><p>24 de octubre · 9 PM — 4 AM</p><div class="final-rules">DISFRAZ OBLIGATORIO <span>✦</span> NO CERVEZA DE VIDRIO</div><p class="closing">Nos vemos cuando las luces se apaguen.</p></section>
+</main>
+<footer class="site-footer">
+ <div class="footer-event"><span>IRVINGFEST © 2026</span><span>HECHO PARA UNA NOCHE QUE NO SE OLVIDA</span></div>
+ <!-- Marca creadora: el enlace dirige a la página oficial de Facebook de Dulce Invitación. -->
+ <div class="footer-brand">
+  <a class="footer-brand-name" href="https://www.facebook.com/DDInvitacion" target="_blank" rel="noopener noreferrer" aria-label="Visitar Dulce Invitación en Facebook">Dulce Invitación ↗</a>
+  <p class="footer-slogan">“Tú imaginas el momento... nosotros lo convertimos en una historia”</p>
+ </div>
+</footer>
+<!-- Lógica de audio, video y juego. Mantener este archivo separado facilita el mantenimiento. -->
+<script src="script.js"></script>
+</body></html>
