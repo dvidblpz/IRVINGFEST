@@ -94,9 +94,11 @@
   updateCountdown();
   window.setInterval(updateCountdown, 1000);
 
-  // El placeholder se oculta cuando existe un fotograma del video; si falta el MP4, se conserva la indicación.
+  // Safari/iOS puede retrasar loadeddata hasta iniciar la reproducción. El placeholder inicia oculto
+  // y solo se muestra si el navegador reporta un error real de carga/decodificación.
   const video = document.getElementById("terrorVideo"), placeholder = document.getElementById("videoPlaceholder");
-  video.addEventListener("loadeddata", () => placeholder.hidden = true);
+  video.addEventListener("loadedmetadata", () => { placeholder.hidden = true; });
+  video.addEventListener("playing", () => { placeholder.hidden = true; });
   video.addEventListener("error", () => { placeholder.hidden = false; });
   // Juego arcade de un solo nivel: 2 vidas, llave, puerta y pantalla GAME OVER.
   const canvas = document.getElementById("gameCanvas"), ctx = canvas.getContext("2d");
@@ -146,12 +148,28 @@
   const ticketCanvas = document.getElementById("ticketCanvas");
   const ticketStatus = document.getElementById("ticketStatus");
   let ticketFolio = "";
-  openTicket.addEventListener("click", () => { ticketModal.hidden = false; document.body.style.overflow = "hidden"; guestName.focus(); });
+  const ticketCutoffAt = Date.parse("2026-10-25T03:00:00Z"); // 24 oct, 21:00 Monterrey
+  const ticketDeadlinePassed = () => Date.now() >= ticketCutoffAt;
+  function showTicketClosedMessage() {
+    const notice = document.getElementById("ticketCutoffNotice");
+    if (notice) { notice.hidden = false; notice.textContent = "☠ LA NOCHE HA COMENZADO. Ya no es posible generar ni descargar boletos."; notice.classList.add("is-closed"); }
+    ticketStatus.textContent = "La generación de boletos cerró a las 9:00 p. m. del 24 de octubre.";
+    ticketResult.hidden = true;
+    document.getElementById("generateTicket").disabled = true;
+    document.getElementById("downloadTicket").disabled = true;
+    ticketModal.hidden = true;
+    document.body.style.overflow = "";
+  }
+  openTicket.addEventListener("click", () => {
+    if (ticketDeadlinePassed()) { showTicketClosedMessage(); return; }
+    ticketModal.hidden = false; document.body.style.overflow = "hidden"; guestName.focus();
+  });
   function closeTicketModal(){ticketModal.hidden = true;document.body.style.overflow = "";openTicket.focus();}
   closeTicket.addEventListener("click", closeTicketModal);
   ticketModal.addEventListener("click", e => {if(e.target===ticketModal)closeTicketModal();});
   document.addEventListener("keydown", e => {if(e.key==="Escape"&&!ticketModal.hidden)closeTicketModal();});
   document.getElementById("generateTicket").addEventListener("click", () => {
+    if (ticketDeadlinePassed()) { showTicketClosedMessage(); return; }
     const name = guestName.value.trim();
     if(!name){guestName.setCustomValidity("Escribe el nombre para personalizar el boleto.");guestName.reportValidity();guestName.addEventListener("input",()=>guestName.setCustomValidity(""),{once:true});return;}
     ticketFolio = "IRV-" + new Date().getFullYear() + "-" + Array.from(crypto.getRandomValues(new Uint8Array(4)),b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
@@ -183,6 +201,7 @@
 
   });
   document.getElementById("downloadTicket").addEventListener("click",()=>{
+    if (ticketDeadlinePassed()) { showTicketClosedMessage(); return; }
     if(!ticketFolio)return;
     ticketCanvas.toBlob(blob=>{if(!blob){ticketStatus.textContent="No se pudo crear la imagen. Intenta de nuevo.";return;}const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=ticketFolio+".png";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);ticketStatus.textContent="Descarga solicitada. Revisa tus archivos.";},"image/png");
   });
@@ -229,60 +248,109 @@
 })();
 
 
-/* Cierra la generación/descarga a las 21:00 del 24/oct/2026 en Monterrey (UTC-6). */
+
+
+/* =========================================================
+   IRVINGFEST — BLOQUEO DE BOLETOS (MODO DE PRUEBA)
+   Fecha de prueba: 19 octubre 2026, 07:00 Monterrey
+   07:00 Monterrey = 13:00 UTC
+   ========================================================= */
+
 (() => {
-  const cutoffAt = Date.parse("2026-10-25T03:00:00Z");
-  const notice = document.getElementById("ticketCutoffNotice");
-  const isClosed = () => Date.now() >= cutoffAt;
-  const isTicketControl = (el) => {
-    const text = (el.innerText || el.value || el.getAttribute("aria-label") || "").toLowerCase();
-    const id = (el.id || "").toLowerCase();
-    const action = (el.getAttribute("onclick") || "").toLowerCase();
-    return /boleto|ticket|descargar|download|generar/.test(text + " " + id + " " + action);
-  };
-  function update() {
-    const closed = isClosed();
-    document.querySelectorAll("button, a, input[type='button'], input[type='submit']").forEach(el => {
-      if (!isTicketControl(el)) return;
-      if (closed) {
-        el.setAttribute("aria-disabled", "true");
-        el.dataset.ticketClosed = "true";
-        if ("disabled" in el) el.disabled = true;
-        if (el.tagName === "A") {
-          if (!("originalHref" in el.dataset)) el.dataset.originalHref = el.getAttribute("href") || "";
-          el.removeAttribute("href");
-          el.setAttribute("tabindex", "-1");
-        }
-        el.classList.add("ticket-download-closed");
-      } else if (el.dataset.ticketClosed === "true") {
-        el.removeAttribute("aria-disabled");
-        delete el.dataset.ticketClosed;
-        if ("disabled" in el) el.disabled = false;
-        if (el.tagName === "A") {
-          if (el.dataset.originalHref) el.setAttribute("href", el.dataset.originalHref);
-          delete el.dataset.originalHref;
-          el.removeAttribute("tabindex");
-        }
-        el.classList.remove("ticket-download-closed");
-      }
-    });
-    if (notice) {
-      notice.hidden = false;
-      notice.textContent = closed
-        ? "☠ LA NOCHE HA COMENZADO. La descarga de boletos está cerrada."
-        : "Puedes generar y descargar tu boleto hasta las 9:00 p. m. del 24 de octubre.";
-      notice.classList.toggle("is-closed", closed);
-    }
+  "use strict";
+
+  const ticketCutoffAt = Date.parse("2026-10-01T13:00:00Z");
+
+  const openTicket = document.getElementById("openTicket");
+  const generateTicket = document.getElementById("generateTicket");
+  const downloadTicket = document.getElementById("downloadTicket");
+  const ticketModal = document.getElementById("ticketModal");
+  const ticketResult = document.getElementById("ticketResult");
+  const ticketStatus = document.getElementById("ticketStatus");
+  const ticketNotice = document.getElementById("ticketCutoffNotice");
+
+  function ticketDeadlinePassed() {
+    return Date.now() >= ticketCutoffAt;
   }
-  document.addEventListener("click", event => {
-    const el = event.target.closest("button, a, input[type='button'], input[type='submit']");
-    if (el && isClosed() && isTicketControl(el)) {
+
+  function showTicketClosedMessage() {
+    if (ticketNotice) {
+      ticketNotice.hidden = false;
+      ticketNotice.textContent =
+        "☠ LA NOCHE HA COMENZADO. Ya no es posible generar ni descargar boletos.";
+      ticketNotice.classList.add("is-closed");
+    }
+
+    if (ticketStatus) {
+      ticketStatus.textContent =
+        "La generación y descarga de boletos está cerrada.";
+    }
+
+    if (ticketResult) ticketResult.hidden = true;
+    if (ticketModal) ticketModal.hidden = true;
+
+    document.body.style.overflow = "";
+  }
+
+  function updateCutoff() {
+    const closed = ticketDeadlinePassed();
+
+    [openTicket, generateTicket, downloadTicket].forEach(button => {
+      if (!button) return;
+
+      button.disabled = closed;
+      button.setAttribute("aria-disabled", String(closed));
+      button.classList.toggle("ticket-download-closed", closed);
+    });
+
+    if (ticketNotice) {
+      ticketNotice.hidden = false;
+      ticketNotice.textContent = closed
+        ? "☠ LA NOCHE HA COMENZADO. Ya no es posible generar ni descargar boletos."
+        : "MODO DE PRUEBA: puedes generar boletos hasta las 7:00 a. m.";
+
+      ticketNotice.classList.toggle("is-closed", closed);
+    }
+
+    if (closed) showTicketClosedMessage();
+  }
+
+  // Bloquear apertura del formulario.
+  if (openTicket) {
+    openTicket.addEventListener("click", event => {
+      if (!ticketDeadlinePassed()) return;
+
       event.preventDefault();
       event.stopImmediatePropagation();
-      update();
-    }
-  }, true);
-  update();
-  window.setInterval(update, 10000);
-  document.addEventListener("visibilitychange", update);
+      showTicketClosedMessage();
+    }, true);
+  }
+
+  // Bloquear la generación, incluso si se intenta activar el botón directamente.
+  if (generateTicket) {
+    generateTicket.addEventListener("click", event => {
+      if (!ticketDeadlinePassed()) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      showTicketClosedMessage();
+    }, true);
+  }
+
+  // Bloquear la descarga.
+  if (downloadTicket) {
+    downloadTicket.addEventListener("click", event => {
+      if (!ticketDeadlinePassed()) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      showTicketClosedMessage();
+    }, true);
+  }
+
+  // Comprobar al abrir, cada 5 segundos y al volver a la pestaña.
+  updateCutoff();
+  window.setInterval(updateCutoff, 5000);
+  document.addEventListener("visibilitychange", updateCutoff);
 })();
+
