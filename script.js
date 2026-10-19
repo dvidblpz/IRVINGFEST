@@ -227,3 +227,62 @@
   document.querySelectorAll("[data-dir]").forEach(b=>{const d=b.dataset.dir;b.addEventListener("pointerdown",e=>{e.preventDefault();touchDir=d;});["pointerup","pointercancel","pointerleave"].forEach(ev=>b.addEventListener(ev,()=>touchDir=null));});
   draw();
 })();
+
+
+/* Cierra la generación/descarga a las 21:00 del 24/oct/2026 en Monterrey (UTC-6). */
+(() => {
+  const cutoffAt = Date.parse("2026-10-25T03:00:00Z");
+  const notice = document.getElementById("ticketCutoffNotice");
+  const isClosed = () => Date.now() >= cutoffAt;
+  const isTicketControl = (el) => {
+    const text = (el.innerText || el.value || el.getAttribute("aria-label") || "").toLowerCase();
+    const id = (el.id || "").toLowerCase();
+    const action = (el.getAttribute("onclick") || "").toLowerCase();
+    return /boleto|ticket|descargar|download|generar/.test(text + " " + id + " " + action);
+  };
+  function update() {
+    const closed = isClosed();
+    document.querySelectorAll("button, a, input[type='button'], input[type='submit']").forEach(el => {
+      if (!isTicketControl(el)) return;
+      if (closed) {
+        el.setAttribute("aria-disabled", "true");
+        el.dataset.ticketClosed = "true";
+        if ("disabled" in el) el.disabled = true;
+        if (el.tagName === "A") {
+          if (!("originalHref" in el.dataset)) el.dataset.originalHref = el.getAttribute("href") || "";
+          el.removeAttribute("href");
+          el.setAttribute("tabindex", "-1");
+        }
+        el.classList.add("ticket-download-closed");
+      } else if (el.dataset.ticketClosed === "true") {
+        el.removeAttribute("aria-disabled");
+        delete el.dataset.ticketClosed;
+        if ("disabled" in el) el.disabled = false;
+        if (el.tagName === "A") {
+          if (el.dataset.originalHref) el.setAttribute("href", el.dataset.originalHref);
+          delete el.dataset.originalHref;
+          el.removeAttribute("tabindex");
+        }
+        el.classList.remove("ticket-download-closed");
+      }
+    });
+    if (notice) {
+      notice.hidden = false;
+      notice.textContent = closed
+        ? "☠ LA NOCHE HA COMENZADO. La descarga de boletos está cerrada."
+        : "Puedes generar y descargar tu boleto hasta las 9:00 p. m. del 24 de octubre.";
+      notice.classList.toggle("is-closed", closed);
+    }
+  }
+  document.addEventListener("click", event => {
+    const el = event.target.closest("button, a, input[type='button'], input[type='submit']");
+    if (el && isClosed() && isTicketControl(el)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      update();
+    }
+  }, true);
+  update();
+  window.setInterval(update, 10000);
+  document.addEventListener("visibilitychange", update);
+})();

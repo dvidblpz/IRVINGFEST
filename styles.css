@@ -105,3 +105,7 @@ a.dj-card:focus-visible{outline:2px solid #ff5269;outline-offset:4px}
     touch-action: manipulation;
   }
 }
+
+.ticket-cutoff-notice{margin:.75rem 0;padding:.8rem 1rem;border:1px solid #8d263b;background:rgba(35,8,15,.92);color:#f4c5cd;text-align:center}
+.ticket-cutoff-notice.is-closed{border-color:#e02b45;color:#ff5268;text-transform:uppercase;letter-spacing:.04em}
+.ticket-download-closed{opacity:.45!important;cursor:not-allowed!important;filter:grayscale(.7)}
