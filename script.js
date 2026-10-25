@@ -148,7 +148,7 @@
   const ticketCanvas = document.getElementById("ticketCanvas");
   const ticketStatus = document.getElementById("ticketStatus");
   let ticketFolio = "";
-  const ticketCutoffAt = Date.parse("2026-10-25T03:00:00Z"); // 24 oct, 21:00 Monterrey
+  const cutoffAt = Date.parse("2026-10-25T02:00:00Z"); // 24/oct/2026, 20:00 Monterrey
   const ticketDeadlinePassed = () => Date.now() >= ticketCutoffAt;
   function showTicketClosedMessage() {
     const notice = document.getElementById("ticketCutoffNotice");
@@ -259,7 +259,7 @@
 (() => {
   "use strict";
 
-  const ticketCutoffAt = Date.parse("2026-10-01T13:00:00Z");
+ const cutoffAt = Date.parse("2026-10-25T02:00:00Z"); // 24/oct/2026, 20:00 Monterrey
 
   const openTicket = document.getElementById("openTicket");
   const generateTicket = document.getElementById("generateTicket");
